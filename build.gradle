@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.titoo'
@@ -35,4 +36,14 @@ tasks.named('test') {
         showStandardStreams = true // Print standard output and error streams
     }
     outputs.upToDateWhen { false } // Always run tests
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.2
+			}
+		}
+	}
 }
