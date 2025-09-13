@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
-                sh './gradlew compileJava'
+                sh './gradlew jar'
             }
         }
         stage('Unit test') {
@@ -17,13 +17,12 @@ pipeline {
         }
         stage('Code coverage') {
             steps {
-                sh './gradlew jacocoTestReport'
+                sh './gradlew jacocoTestCoverageVerification'
                 publishHTML(target: [
                     reportDir: 'build/reports/jacoco/test/html',
                     reportFiles: 'index.html',
                     reportName: 'JaCoCo Report'
                 ])
-                sh './gradlew jacocoTestCoverageVerification'
             }
         }
         stage('Static code analysis') {
