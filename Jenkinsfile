@@ -53,5 +53,31 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to staging') {
+            steps {
+                sh 'docker run -d --rm -p 8765:8080 --name calculator titoo/calculator'
+            }
+        }
+        stage("Acceptance test") {
+            steps {
+                sleep 60
+                sh '''
+                for i in {1..10}; do
+                    if curl -s http://localhost:8765/health; then
+                        exit 0
+                    fi
+                    sleep 6
+                done
+                exit 1
+                '''
+                sh "chmod +x acceptance_test.sh && ./acceptance_test.sh"
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker stop calculator || true'
+            cleanWs()
+        }
     }
 }
