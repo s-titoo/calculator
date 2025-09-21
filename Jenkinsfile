@@ -35,5 +35,23 @@ pipeline {
                 ])
             }
         }
+        stage('Package') {
+            steps {
+                sh './gradlew build'
+            }
+        }
+        stage('Docker build') {
+            steps {
+                sh 'docker build -t titoo/calculator .'
+            }
+        }
+        stage('Docker push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+                    sh 'docker push titoo/calculator'
+                }
+            }
+        }
     }
 }
