@@ -1,13 +1,13 @@
 pipeline {
     agent any
     triggers {
-        pollSCM('H/5 * * * *')
+        pollSCM('* * * * *')
 
     }
     stages {
         stage('Compile') {
             steps {
-                sh './gradlew jar'
+                sh './gradlew compileJava'
             }
         }
         stage('Unit test') {
