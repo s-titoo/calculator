@@ -1,0 +1,16 @@
+---
+- hosts: web1
+  become: yes
+  become_method: sudo
+  vars:
+    http_port: 8080
+  vars_files:
+    - sudo_password.yml
+  tasks:
+    - name: print port number
+      debug:
+        msg: "Port number: {{ http_port }}"
+    - name: print IP address
+      debug:
+        msg: "{% for host in groups['all'] %} {{
+                hostvars[host]['ansible_host'] }} {% endfor %}"
