@@ -2,7 +2,6 @@ pipeline {
     agent any
     triggers {
         pollSCM('* * * * *')
-
     }
     stages {
         stage('Compile') {
@@ -17,7 +16,7 @@ pipeline {
         }
         stage('Code coverage') {
             steps {
-                sh './gradlew jacocoTestCoverageVerification'
+                sh './gradlew jacocoTestReport jacocoTestCoverageVerification'
                 publishHTML(target: [
                     reportDir: 'build/reports/jacoco/test/html',
                     reportFiles: 'index.html',
@@ -76,9 +75,23 @@ pipeline {
     }
     post {
         always {
-            sh 'docker stop calculator || true'
-            sh 'docker rm calculator || true'
-            cleanWs()
+            script {
+                try {
+                    sh 'docker stop calculator || true'
+                } catch (Exception e) {
+                    echo "Docker stop failed: ${e.message}"
+                }
+                try {
+                    sh 'docker rm calculator || true'
+                } catch (Exception e) {
+                    echo "Docker remove failed: ${e.message}"
+                }
+                try {
+                    cleanWs()
+                } catch (Exception e) {
+                    echo "Workspace cleanup failed: ${e.message}"
+                }
+            }
         }
     }
 }

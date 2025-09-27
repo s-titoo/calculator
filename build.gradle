@@ -40,6 +40,12 @@ tasks.named('test') {
     outputs.upToDateWhen { false } // Always run tests
 }
 
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+    }
+}
+
 jacocoTestCoverageVerification {
 	violationRules {
 		rule {
