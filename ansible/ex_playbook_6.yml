@@ -1,0 +1,22 @@
+- hosts: web1
+  become: yes
+  become_method: sudo
+  vars_files:
+    - sudo_password.yml
+  tasks:
+    # - name: Ensure Docker is installed
+    #   apt:
+    #     name: docker.io
+    #     state: present
+    #     update_cache: yes
+    - name: Run Hazelcast container
+      community.docker.docker_container:
+        name: hazelcast_1
+        image: hazelcast/hazelcast:5.5.0
+        state: started
+        restart_policy: always
+        published_ports:
+          - 5701:5701
+        pull: yes
+        detach: true
+        recreate: true

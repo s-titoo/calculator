@@ -1,0 +1,12 @@
+- hosts: web1
+  become: yes
+  become_method: sudo
+  vars_files:
+    - sudo_password.yml
+  tasks:
+    - name: Create namespace
+      kubernetes.core.k8s:
+        name: my-namespace
+        api_version: v1
+        kind: Namespace
+        state: present
