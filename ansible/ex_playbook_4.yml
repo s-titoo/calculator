@@ -1,0 +1,87 @@
+---
+- hosts: web1
+  become: yes
+  become_method: sudo
+  vars_files:
+    - sudo_password.yml
+  tasks:
+    - name: Ensure Java Runtime Environment is installed
+      apt:
+        name: default-jre
+        state: present
+        update_cache: yes
+
+    - name: Create Hazelcast directory
+      file:
+        path: /var/hazelcast
+        state: directory
+
+    - name: Download Hazelcast
+      get_url:
+        url: https://repo1.maven.org/maven2/com/hazelcast/hazelcast/5.5.0/hazelcast-5.5.0.jar
+        dest: /var/hazelcast/hazelcast.jar
+        mode: a+r
+
+    - name: Copy Hazelcast starting script
+      copy:
+        src: hazelcast.sh
+        dest: /var/hazelcast/hazelcast.sh
+        mode: a+x
+
+    - name: Configure Hazelcast as a service
+      file:
+        path: /etc/init.d/hazelcast
+        state: link
+        force: yes
+        src: /var/hazelcast/hazelcast.sh
+
+    - name: Start Hazelcast
+      service:
+        name: hazelcast
+        enabled: yes
+        state: started
+
+- hosts: web1
+  become: yes
+  become_method: sudo
+  vars_files:
+    - sudo_password.yml
+  tasks:
+    - name: Ensure Java Runtime Environment is installed
+      apt:
+        name: default-jre
+        state: present
+        update_cache: yes
+
+    - name: Create directory for Calculator
+      file:
+        path: /var/calculator
+        state: directory
+
+    - name: Copy Calculator starting script
+      copy:
+        src: calculator.sh
+        dest: /var/calculator/calculator.sh
+        mode: a+x
+
+    - name: Configure Calculator as a service
+      file:
+        path: /etc/init.d/calculator
+        state: link
+        force: yes
+        src: /var/calculator/calculator.sh
+
+    - name: Copy Calculator
+      copy:
+        src: ../build/libs/calculator-0.0.1-SNAPSHOT.jar
+        dest: /var/calculator/calculator.jar
+        mode: a+x
+      notify:
+        - restart Calculator
+
+  handlers:
+    - name: restart Calculator
+      service:
+        name: calculator
+        enabled: yes
+        state: restarted
