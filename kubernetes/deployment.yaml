@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: calculator
-        image: titoo/calculator
+        image: titoo/calculator:caching
         ports:
         - containerPort: 8080
         resources:

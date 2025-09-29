@@ -1,6 +1,8 @@
-package com.titoo.calculator; 
-import org.springframework.stereotype.Service; 
- 
+package com.titoo.calculator;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
 /**
  * Service class providing basic calculator operations.
  * <p>
@@ -8,8 +10,15 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service 
-public class Calculator { 
-     public int sum(int a, int b) { 
-          return a + b; 
-     } 
-} 
+public class Calculator {
+     @Cacheable("sum")
+     public int sum(int a, int b) {
+          try {
+               Thread.sleep(3000); // dummy delay to simulate a long calculation for caching demo purposes
+          }
+          catch (InterruptedException e) {
+               e.printStackTrace();
+          }
+          return a + b;
+     }
+}
