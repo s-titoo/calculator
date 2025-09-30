@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  vars_files:
+    - sudo_password.yml
+  roles:
+  - role: geerlingguy.mysql
