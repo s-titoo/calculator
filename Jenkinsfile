@@ -74,25 +74,27 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            script {
-                try {
-                    sh 'docker stop calculator || true'
-                } catch (Exception e) {
-                    echo "Docker stop failed: ${e.message}"
-                }
-                try {
-                    sh 'docker rm calculator || true'
-                } catch (Exception e) {
-                    echo "Docker remove failed: ${e.message}"
-                }
-                try {
-                    cleanWs()
-                } catch (Exception e) {
-                    echo "Workspace cleanup failed: ${e.message}"
-                }
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             try {
+    //                 sh 'docker stop calculator || true'
+    //                 sh 'docker stop hazelcast || true'
+    //             } catch (Exception e) {
+    //                 echo "Docker stop failed: ${e.message}"
+    //             }
+    //             try {
+    //                 sh 'docker rm calculator || true'
+    //                 sh 'docker rm hazelcast || true'
+    //             } catch (Exception e) {
+    //                 echo "Docker remove failed: ${e.message}"
+    //             }
+    //             try {
+    //                 cleanWs()
+    //             } catch (Exception e) {
+    //                 echo "Workspace cleanup failed: ${e.message}"
+    //             }
+    //         }
+    //     }
+    // }
 }
