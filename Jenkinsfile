@@ -54,6 +54,7 @@ pipeline {
         }
         stage('Deploy to staging') {
             steps {
+                sh 'docker run -d --rm -p 5701:5701 --name hazelcast hazelcast/hazelcast:5.5.0'
                 sh 'docker run -d --rm -p 8765:8080 --name calculator titoo/calculator'
             }
         }

@@ -18,6 +18,8 @@ public class CalculatorApplication {
 	@Bean
 	public ClientConfig hazelcastClientConfig() {
 		ClientConfig clientConfig = new ClientConfig();
+		// Use address 'hazelcast' (Service name) for Kubernetes deployment
+		// and 'localhost' for local deployment via Ansible
 		clientConfig.getNetworkConfig().addAddress("localhost");
 		return clientConfig;
 	}
